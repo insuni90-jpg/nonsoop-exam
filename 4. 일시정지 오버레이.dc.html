@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Pretendard";src:url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");font-weight:45 920;font-display:swap}
+@font-face{font-family:"SUIT Variable";src:url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.woff2") format("woff2-variations");font-weight:100 900;font-display:swap}
+html,body{margin:0;padding:0;background:#F9FAFB}
+a{color:#00661A;text-decoration:none}a:hover{color:#008B48}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:0.55}50%{transform:scale(1.06);opacity:0.85}}
+</style>
+</helmet>
+<div data-screen-label="일시정지 오버레이" style="position:relative;min-height:100vh;min-width:1280px;background:#F9FAFB;display:flex;align-items:center;justify-content:center;font-family:'Pretendard',sans-serif;letter-spacing:-0.3px;overflow:hidden">
+  <div aria-hidden="true" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:720px;height:720px;border-radius:999px;background:radial-gradient(circle,#CBF6C3 0%,rgba(203,246,195,0) 68%);animation:breathe 5s ease-in-out infinite"></div>
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:0">
+    <div style="width:88px;height:88px;border-radius:999px;background:#FFFFFF;border:1px solid #E5E7EB;box-shadow:0 8px 28px rgba(17,24,39,0.08);display:flex;align-items:center;justify-content:center">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#008B48" stroke-width="2.4" stroke-linecap="round"><line x1="9" y1="16.5" x2="9" y2="7.5"></line><line x1="15" y1="16.5" x2="15" y2="7.5"></line></svg>
+    </div>
+    <h1 style="margin:32px 0 0;font-family:'SUIT Variable',sans-serif;font-weight:700;font-size:34px;color:#111827">잠시 멈췄어요</h1>
+    <p style="margin:14px 0 0;font-size:17px;font-weight:500;line-height:1.6;color:#4B5563;text-align:center">다녀오셔도 괜찮아요. 재개하기 전까지 시간은 흐르지 않아요.</p>
+    <div style="margin-top:40px;display:flex;align-items:center;gap:14px;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:999px;padding:12px 26px 12px 20px">
+      <span style="display:flex;align-items:center;gap:6px;background:#CBF6C3;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;color:#00661A">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="9" y1="17" x2="9" y2="7"></line><line x1="15" y1="17" x2="15" y2="7"></line></svg>
+        일시정지됨
+      </span>
+      <span style="font-size:14px;font-weight:500;color:#6B7280">남은 시간</span>
+      <span style="font-family:'SUIT Variable',sans-serif;font-weight:700;font-size:24px;color:#6B7280;font-variant-numeric:tabular-nums;text-decoration:none">72:14</span>
+    </div>
+    <button onClick="{{ onResume }}" style="margin-top:44px;height:56px;padding:0 48px;border-radius:12px;border:none;background:#008B48;font-family:'Pretendard',sans-serif;font-size:18px;font-weight:600;color:#FFFFFF;cursor:pointer;letter-spacing:-0.3px;transition:background 0.15s" style-hover="background:#00661A">응시 재개</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}"></script>
+</body>
+</html>

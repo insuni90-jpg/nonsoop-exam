@@ -1,111 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>논숲 시험 응시 프로토타입</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <main class="viewport" aria-label="시험 응시 프로토타입">
-      <div class="exam" id="exam">
-        <header class="header">
-          <div class="header-left">
-            <div class="brand">
-              <img src="./assets/logo.svg" alt="" />
-              <span>논숲</span>
-            </div>
-          </div>
-          <div class="header-center">
-            <h1>2026학년도 숙명여대 모의논술 v3</h1>
-            <p>기출변형 / 2026년 / 숙명여자대학교</p>
-          </div>
-          <div class="header-right">
-            <div class="timer">
-              <span class="timer-readout"><img src="./assets/clock.svg" alt="" />01 : 40 : 00</span>
-              <img class="utility-icon" src="./assets/rotate.svg" alt="시간 초기화" />
-            </div>
-            <div class="header-actions">
-              <button type="button" class="button button-secondary">나가기</button>
-              <button type="button" class="button button-primary">제출하기</button>
-            </div>
-          </div>
-        </header>
-
-        <nav class="question-nav" aria-label="문제 목록">
-          <button type="button" class="nav-item active">문제 1-1</button>
-          <button type="button" class="nav-item">문제 1-2</button>
-          <button type="button" class="nav-item">문제 2-1</button>
-          <button type="button" class="nav-item">문제 2-2</button>
-        </nav>
-
-        <section class="question-card" aria-labelledby="question-title">
-          <h2 id="question-title">제시문 (가)와 (나)의 관점을 종합하여, 바람직한 공동체의 조건을 논하시오.</h2>
-          <p>권장 분량 300 ~ 330자</p>
-        </section>
-
-        <section class="reading-area" id="readingArea" aria-label="제시문">
-          <div class="reading-toolbar">
-            <span>&lt;제시문&gt;</span>
-            <div class="reading-utilities">
-              <div class="zoom-control" aria-label="확대 배율 100퍼센트">
-                <button type="button" class="icon-button inert" aria-label="축소"><img src="./assets/minus.svg" alt="" /></button>
-                <span>100%</span>
-                <button type="button" class="icon-button inert" aria-label="확대"><img src="./assets/plus.svg" alt="" /></button>
-              </div>
-              <span class="divider" aria-hidden="true"></span>
-              <div class="highlight-memo">
-                <button type="button" class="icon-button memo-utility" id="memoUtility" aria-expanded="false" aria-controls="memoPanel" aria-label="메모 목록 열기">
-                  <img src="./assets/memo.svg" alt="" />
-                  <span class="count memo-count" id="memoCount">3</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="memo-panel" id="memoPanel" hidden>
-            <div class="memo-panel-title">메모 목록 <strong>(3)</strong></div>
-            <div class="memo-list" role="list"></div>
-          </div>
-
-          <div class="reading-body" id="readingBody" tabindex="0">
-            <p>(가) 인간은 스스로 판단하고 선택할 때 비로소 자신의 삶의 주인이 된다. 타인에게 해를 끼치지 않는 한, 개인의 사상과 행동은 어떠한 간섭으로부터도 자유로워야 한다. 사회가 개인의 선택을 대신해 주려는 순간, 그 사회는 구성원을 성숙한 인격체가 아니라 보호와 교정의 대상으로 격하시킨다. 다수가 옳다고 믿는 관행이라 할지라도 그것이 개인에게 강제되는 순간 진리를 향한 토론의 가능성은 닫히고 만다.</p>
-            <p>개별성의 발휘야말로 사회가 진보하는 유일한 원천이다. 관습이 명하는 대로만 사는 사람은 선택이라는 인간 고유의 능력을 사용하지 않는 것이며, 그러한 삶이 아무리 안전해 보일지라도 그것은 모방이지 삶이 아니다. 따라서 좋은 사회란 서로 다른 삶의 실험이 최대한 허용되는 사회이다.</p>
-            <p><mark class="highlight-anchor" id="highlight-a" data-highlight-id="highlight-a" data-memo-content="개인 자유 최우선 → 공동체 우선 관점과 대조해서 쓸 것">(나) 개인은 홀로 존재하지 않는다. 우리가 무엇을 원하고 무엇을 옳다고 여기는지조차 공동체가 물려준 언어와 서사 속에서 형성된다.</mark> 자아는 공동체에 앞서 완성된 채로 주어지는 것이 아니라, 가족과 이웃, 동료 시민과 맺는 관계 속에서 비로소 구성된다. 따라서 공동체의 요청으로부터 완전히 분리된 '무연고적 자아'란 철학적 허구에 지나지 않는다.</p>
-            <p>권리의 언어만으로는 좋은 삶을 설명할 수 없다. 시민적 덕성, 곧 공동선에 대한 헌신과 서로에 대한 책임이 뒷받침되지 않는 자유는 고립과 무관심으로 귀결된다. 공동체가 개인에게 부과하는 의무는 자유의 제약이 아니라, 개인이 의미 있는 삶을 살아가기 위한 조건이다.</p>
-            <p><mark class="highlight-anchor" id="highlight-b" data-highlight-id="highlight-b">(다) A시는 도심의 오래된 골목 상권이 관광지로 알려지면서 소음과 쓰레기 문제로 몸살을 앓자, 주민 투표를 거쳐 야간 영업시간을 제한하는 조례를 제정하였다.</mark> 상인 일부는 "영업의 자유에 대한 과도한 침해"라며 반발했지만, 다수 주민은 "마을의 삶을 지키기 위한 최소한의 약속"이라며 찬성하였다. 조례 시행 후 관광객은 줄었으나 주민 만족도는 크게 높아졌고, 일부 상인은 매출 감소를 이유로 조례 폐지를 청구하는 소송을 제기하였다.</p>
-            <p><mark class="highlight-anchor" id="highlight-c" data-highlight-id="highlight-c">(라) 인간은 스스로 판단하고 선택할 때 비로소 자신의 삶의 주인이 된다.</mark> 타인에게 해를 끼치지 않는 한, 개인의 사상과 행동은 어떠한 간섭으로부터도 자유로워야 한다. 사회가 개인의 선택을 대신해 주려는 순간, 그 사회는 구성원을 성숙한 인격체가 아니라 보호와 교정의 대상으로 격하시킨다. 다수가 옳다고 믿는 관행이라 할지라도 그것이 개인에게 강제되는 순간 진리를 향한 토론의 가능성은 닫히고 만다.</p>
-            <p>개별성의 발휘야말로 사회가 진보하는 유일한 원천이다. 관습이 명하는 대로만 사는 사람은 선택이라는 인간 고유의 능력을 사용하지 않는 것이며, 그러한 삶이 아무리 안전해 보일지라도 그것은 모방이지 삶이 아니다. 따라서 좋은 사회란 서로 다른 삶의 실험이 최대한 허용되는 사회이다.</p>
-          </div>
-
-          <div class="memo-popover" id="memoPopover" role="dialog" aria-modal="false" aria-labelledby="memoPopoverTitle" hidden>
-            <div class="memo-popover-meta" id="memoPopoverTitle"><b>문제 1-1</b><span id="memoPassage">제시문 (가)</span></div>
-            <div class="memo-excerpt" id="memoExcerpt"></div>
-            <textarea id="memoInput" maxlength="300" placeholder="메모를 입력하세요." aria-label="메모 내용"></textarea>
-            <div class="memo-popover-actions">
-              <button type="button" class="memo-button memo-button-secondary" id="memoCancel">취소</button>
-              <button type="button" class="memo-button memo-button-primary" id="memoSave">저장</button>
-            </div>
-          </div>
-        </section>
-
-        <div class="floating-menu" id="floatingMenu" hidden role="toolbar" aria-label="선택한 텍스트 작업">
-          <button type="button" id="floatingMemo">메모 추가</button>
-        </div>
-
-        <section class="answer-area" aria-label="답안지">
-          <div class="answer-toolbar"><span>1-1 답안지</span><span><strong>152</strong> / 600자 (적정 401자)</span></div>
-          <div class="manuscript-wrap">
-            <div class="manuscript-grid"><span class="first-character">가</span></div>
-            <div class="over-limit-grid"></div>
-          </div>
-          <div class="answer-footer">
-            <span>최소 401자 더 입력해주세요.</span>
-            <span class="footer-meta"><span>35자 x 20행</span><i></i><b>초과 입력 가능 +2줄</b></span>
-          </div>
-        </section>
-      </div>
-    </main>
-    <script src="./app.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>논숲 시험 응시 프로토타입</title>
+  <script>
+    // 단일 파일 실행본으로 자동 이동
+    location.replace("논숲 시험 응시 프로토타입.html");
+  </script>
+</head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;color:#333;">
+  <p>프로토타입으로 이동 중입니다…</p>
+  <p>자동으로 넘어가지 않으면 <a href="논숲 시험 응시 프로토타입.html">여기를 클릭</a>하세요.</p>
+</body>
 </html>

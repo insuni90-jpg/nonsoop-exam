@@ -1,0 +1,241 @@
+:root {
+  --background: #F9FAFB;
+  --primary: #008B48;
+  --caption: #6B7280;
+  --countdown-duration: 1000ms;
+  --start-duration: 1260ms;
+  --countdown-ring-size: 208px;
+  --countdown-ring-width: 3px;
+  --start-portal-size: 240px;
+  --start-ring-width: 1.5px;
+  --caption-offset: 128px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--background);
+}
+
+body,
+button {
+  font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.prototype {
+  position: relative;
+  display: grid;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 320px;
+  place-items: center;
+  overflow: hidden;
+  background: var(--background);
+  color: var(--primary);
+}
+
+.motion-stage {
+  position: relative;
+  display: grid;
+  width: 400px;
+  height: 400px;
+  place-items: center;
+}
+
+.countdown-view,
+.start-view {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.countdown-svg {
+  position: absolute;
+  width: var(--countdown-ring-size);
+  height: var(--countdown-ring-size);
+  overflow: visible;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.countdown-ring {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: var(--countdown-ring-width);
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  vector-effect: non-scaling-stroke;
+}
+
+.countdown-number,
+.start-text {
+  position: relative;
+  z-index: 2;
+  color: var(--primary);
+  line-height: 1;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.countdown-number {
+  font-size: 76px;
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.start-text {
+  font-size: 52px;
+  font-weight: 600;
+  letter-spacing: -.04em;
+}
+
+.start-portal {
+  position: absolute;
+  width: var(--start-portal-size);
+  height: var(--start-portal-size);
+  overflow: visible;
+  transform-origin: center;
+}
+
+.start-ring {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: var(--start-ring-width);
+  vector-effect: non-scaling-stroke;
+  opacity: 0;
+}
+
+.motion-caption {
+  position: absolute;
+  top: calc(50% + var(--caption-offset));
+  left: 50%;
+  width: 280px;
+  height: 24px;
+  margin: 0;
+  color: var(--caption);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -.02em;
+  transform: translateX(-50%);
+}
+
+.caption-copy {
+  position: absolute;
+  inset: 0;
+  display: block;
+  text-align: center;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.caption-before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.caption-calm {
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+.motion-caption.show-calm .caption-before {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+
+.motion-caption.show-calm .caption-calm {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.countdown-view.is-exiting .motion-caption {
+  animation: caption-exit 220ms ease-in both;
+}
+
+.countdown-view.is-exiting .countdown-svg {
+  animation: countdown-ring-handoff 220ms ease-out both;
+}
+
+.replay-button {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  min-width: 80px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  opacity: .72;
+  transition: opacity 160ms ease;
+}
+
+.replay-button:hover,
+.replay-button:focus-visible {
+  opacity: 1;
+}
+
+.replay-button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.replay-button:disabled {
+  cursor: default;
+  opacity: .32;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@keyframes countdown-ring-handoff {
+  from { opacity: 1; transform: rotate(-90deg) scale(1); }
+  to { opacity: 0; transform: rotate(-90deg) scale(1.035); }
+}
+
+@keyframes caption-exit {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to { opacity: 0; transform: translateX(-50%) translateY(-3px); }
+}
+
+@media (max-width: 520px), (max-height: 520px) {
+  :root {
+    --countdown-ring-size: 176px;
+    --start-portal-size: 196px;
+    --caption-offset: 112px;
+  }
+
+  .motion-stage {
+    width: 320px;
+    height: 320px;
+  }
+
+  .countdown-number { font-size: 64px; }
+  .start-text { font-size: 46px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --countdown-duration: 1ms;
+    --start-duration: 1ms;
+  }
+}

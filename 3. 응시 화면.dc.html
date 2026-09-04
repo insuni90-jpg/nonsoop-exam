@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Pretendard";src:url("./assets/Pretendard-Medium.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Pretendard";src:url("./assets/Pretendard-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
+html,body{width:100%;height:100%;margin:0;overflow:auto;background:#eef0f2;color:#111827;font-family:"Pretendard",Arial,sans-serif;font-weight:500}
+a{color:#008b48}a:hover{color:#007a3f}
+#om-root ::selection{background:#dff2a2}
+@keyframes wpCaret{0%,49%{opacity:1}50%,100%{opacity:0}}
+</style>
+</helmet>
+<div data-screen-label="응시 화면" style="position:relative;width:1920px;height:1080px;overflow:visible">
+  <div style="position:relative;width:1920px;height:1080px;overflow:hidden;background:#f9fafb;box-sizing:border-box">
+    <header style="position:absolute;top:0;right:0;left:0;display:grid;grid-template-columns:610px 700px 610px;height:76px;background:#ffffff;box-sizing:border-box">
+      <div style="display:flex;align-items:center;padding-left:40px;box-sizing:border-box">
+        <div style="display:flex;align-items:center;gap:8.5px;font-size:24px;font-weight:600;letter-spacing:-0.24px">
+          <img src="./assets/logo.svg" alt="" style="width:23.44px;height:31.96px">
+          <span>논숲</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;flex-direction:column;justify-content:center;text-align:center;box-sizing:border-box">
+        <h1 style="margin:0;font-size:20px;line-height:1.5;font-weight:600">2026학년도 숙명여대 모의논술 v3</h1>
+        <p style="margin:2px 0 0;font-size:12px;line-height:1.5;color:#6b7280">기출변형 / 2026년 / 숙명여자대학교</p>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:20px;padding-right:40px;box-sizing:border-box">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div data-name="자동저장" style="display:flex;align-items:center;gap:8px">
+            <span style="{{ autoSaveStyle }}">{{ autoSaveText }}</span>
+            <span aria-hidden="true" style="width:1px;height:8px;background:#9ca3af"></span>
+          </div>
+          <span style="display:flex;align-items:center;gap:4.86px;color:#4b5563;font-size:17px;line-height:1.6;font-weight:600;white-space:nowrap">
+            <img src="./assets/clock.svg" alt="" style="width:20px;height:20px">{{ timeText }}
+          </span>
+          <img onClick="{{ resetTime }}" class="utility-icon" src="./assets/rotate.svg" alt="시간 초기화" style="width:16px;height:16px;cursor:pointer">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onClick="{{ onExit }}" type="button" style="height:44px;padding:10px 20px;border-radius:8px;font:inherit;font-size:14px;line-height:1.5;font-weight:600;cursor:pointer;color:#4b5563;background:white;border:1px solid #e5e7eb">나가기</button>
+          <button onClick="{{ onSubmit }}" type="button" style="height:44px;padding:10px 20px;border-radius:8px;font:inherit;font-size:14px;line-height:1.5;font-weight:600;cursor:pointer;color:white;background:#008b48;border:1px solid #008b48">답안 제출</button>
+        </div>
+      </div>
+    </header>
+
+    <nav aria-label="문제 목록" style="position:absolute;top:76px;left:0;width:1920px;height:44px;display:flex;background:#f3f4f6;border-block:1px solid #e5e7eb;box-sizing:border-box">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button onClick="{{ t.go }}" type="button" style="{{ t.style }}">{{ t.label }}</button>
+      </sc-for>
+    </nav>
+
+    <section style="position:absolute;left:30px;top:150px;width:840px;height:110px;padding:20px 30px;border:1px solid #e5e7eb;border-radius:12px;background:white;box-sizing:border-box">
+      <h2 style="margin:0;font-size:20px;line-height:1.5;font-weight:600">{{ questionText }}</h2>
+      <p style="margin:4px 0 0;font-size:12px;line-height:1.5;color:#6b7280">{{ questionMeta }}</p>
+    </section>
+
+    <section ref="{{ areaRef }}" aria-label="제시문" style="position:absolute;left:30px;top:282px;width:840px;height:759px;display:flex;flex-direction:column;box-sizing:border-box">
+      <div style="flex:0 0 50px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border:1px solid #e5e7eb;border-radius:12px 12px 0 0;background:white;color:#4b5563;font-size:14px;line-height:1.4;box-sizing:border-box">
+        <span>&lt;제시문&gt;</span>
+        <div style="display:flex;align-items:center;gap:20px">
+          <div aria-label="확대 배율" style="display:flex;align-items:center;gap:4px;font-size:12px;line-height:1.5">
+            <button onClick="{{ zoomOut }}" type="button" aria-label="축소" style="margin:0;padding:0;border:0;background:transparent;display:flex;align-items:center;justify-content:center;width:16px;height:16px;cursor:pointer;font:inherit">
+              <img src="./assets/minus.svg" alt="" style="width:16px;height:16px">
+            </button>
+            <span>{{ zoomLabel }}</span>
+            <button onClick="{{ zoomIn }}" type="button" aria-label="확대" style="margin:0;padding:0;border:0;background:transparent;display:flex;align-items:center;justify-content:center;width:16px;height:16px;cursor:pointer;font:inherit">
+              <img src="./assets/plus.svg" alt="" style="width:16px;height:16px">
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ hintOpen }}" hint-placeholder-val="{{ true }}">
+        <div data-name="형광펜 안내" style="flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 30px;background:#f7fce9;border-inline:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;box-sizing:border-box">
+          <span style="display:flex;align-items:center;gap:8px;min-width:0;color:#4b5563;font-size:13px;line-height:1.5">
+            <img src="./assets/pen.svg" alt="" style="width:16px;height:16px;flex-shrink:0">
+            <span style="min-width:0">문장을 드래그하면 <b style="font-weight:600;color:#111827">형광펜</b>으로 표시하고 <b style="font-weight:600;color:#111827">메모</b>를 남길 수 있어요.</span>
+          </span>
+          <button onClick="{{ closeHint }}" type="button" aria-label="안내 닫기" style="flex-shrink:0;margin:0;padding:0;border:0;background:transparent;display:flex;align-items:center;justify-content:center;width:20px;height:20px;cursor:pointer;font:inherit">
+            <img src="./assets/close.svg" alt="" style="width:16px;height:16px">
+          </button>
+        </div>
+      </sc-if>
+
+      <div ref="{{ bodyRef }}" onMouseUp="{{ captureSelection }}" onKeyUp="{{ captureSelection }}" onClick="{{ onBodyClick }}" onScroll="{{ hideFloating }}" tabIndex="{{ 0 }}" style="min-width:0;min-height:0;flex:1 1 auto;overflow-y:auto;padding:50px;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 12px 12px;background:white;color:#111827;font-size:{{ passageSize }};line-height:1.6;scroll-behavior:smooth;scrollbar-gutter:stable;box-sizing:border-box;outline:none">
+        <sc-if value="{{ notTab1 }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0 0 26px">(가) 장욱 주임은 개발자다. 그는 기능을 구현하기 전에 반드시 "이 코드가 6개월 뒤에도 읽히는가"를 묻는다. 급한 일정 속에서도 테스트를 먼저 쓰고, 동료의 코드 리뷰에는 지적보다 대안을 남긴다. 장 주임이 짠 모듈은 유독 장애가 적은데, 그 이유를 물으면 "예외를 미리 상상하는 버릇" 때문이라고 답한다. 화려한 기술보다 예측 가능한 코드를 택하는 그의 태도는, 팀 전체의 속도를 오래 유지시키는 조용한 힘이다.</p>
+          <p style="margin:0 0 26px">(나) 차윤미 전임은 디자이너다. 그녀의 화면은 처음 보는 사람도 헤매지 않는다. 버튼 하나의 위치를 정하기 위해 실제 학생 다섯 명의 손 움직임을 관찰하고, 색 하나를 고를 때도 "이 색이 시험 중인 사람을 초조하게 만드는가"를 먼저 따진다. 차 전임은 디자인을 꾸미는 일이 아니라 결정을 줄여주는 일이라고 정의한다. 그래서 그녀가 만든 화면에는 설명이 필요 없고, 설명이 필요 없는 화면은 결국 신뢰가 된다.</p>
+          <p style="margin:0 0 26px"><mark class="highlight-anchor" id="highlight-d" data-highlight-id="highlight-d" style="color:inherit;background:#eff9c8;box-decoration-break:clone;-webkit-box-decoration-break:clone;transition:background-color .2s ease, box-shadow .2s ease">(다) 김성우 사원은 기획자다. 입사 1년차지만 그의 기획서에는 "왜"가 빠지지 않는다.</mark> 기능을 요청받으면 그 기능이 해결하려는 문제를 먼저 적고, 문제가 명확하지 않으면 기능을 만들지 않는다. 회의에서 가장 많이 하는 말은 "그건 누구의 어떤 불편을 없애나요?"다. 김 사원의 문서는 개발자와 디자이너가 같은 그림을 보게 만들고, 같은 그림을 보는 팀은 다시 물을 일이 줄어든다. 경력은 짧지만 질문의 질은 이미 팀의 기준이 되었다.</p>
+          <p style="margin:0">(라) 박수호 상무는 CTO다. 그는 기술 조직의 리더이지만 회의에서 가장 늦게 말한다. 먼저 팀원의 판단을 끝까지 듣고, 결정이 필요할 때만 방향을 제시한다. 실패한 프로젝트의 책임은 자신이 지고, 성공한 프로젝트의 공은 실무자의 이름으로 남긴다. 박 상무가 자주 하는 말은 "내가 몰라도 되는 일을 늘리는 것이 내 일"이다. 그 말대로 그의 조직은 리더가 자리를 비워도 멈추지 않는다. 권한을 나누는 것이 곧 조직을 키우는 것임을, 그는 말이 아니라 구조로 증명한다.</p>
+        </sc-if>
+        <sc-if value="{{ isTab1 }}" hint-placeholder-val="{{ true }}">
+        <p style="margin:0 0 26px">(가) 인간은 스스로 판단하고 선택할 때 비로소 자신의 삶의 주인이 된다. 타인에게 해를 끼치지 않는 한, 개인의 사상과 행동은 어떠한 간섭으로부터도 자유로워야 한다. 사회가 개인의 선택을 대신해 주려는 순간, 그 사회는 구성원을 성숙한 인격체가 아니라 보호와 교정의 대상으로 격하시킨다. 다수가 옳다고 믿는 관행이라 할지라도 그것이 개인에게 강제되는 순간 진리를 향한 토론의 가능성은 닫히고 만다.</p>
+        <p style="margin:0 0 26px">개별성의 발휘야말로 사회가 진보하는 유일한 원천이다. 관습이 명하는 대로만 사는 사람은 선택이라는 인간 고유의 능력을 사용하지 않는 것이며, 그러한 삶이 아무리 안전해 보일지라도 그것은 모방이지 삶이 아니다. 따라서 좋은 사회란 서로 다른 삶의 실험이 최대한 허용되는 사회이다.</p>
+        <p style="margin:0 0 26px"><mark class="highlight-anchor" id="highlight-a" data-highlight-id="highlight-a" data-memo-content="개인 자유 최우선 → 공동체 우선 관점과 대조해서 쓸 것" style="color:inherit;background:#eff9c8;box-decoration-break:clone;-webkit-box-decoration-break:clone;transition:background-color .2s ease, box-shadow .2s ease">(나) 개인은 홀로 존재하지 않는다. 우리가 무엇을 원하고 무엇을 옳다고 여기는지조차 공동체가 물려준 언어와 서사 속에서 형성된다.</mark> 자아는 공동체에 앞서 완성된 채로 주어지는 것이 아니라, 가족과 이웃, 동료 시민과 맺는 관계 속에서 비로소 구성된다. 따라서 공동체의 요청으로부터 완전히 분리된 '무연고적 자아'란 철학적 허구에 지나지 않는다.</p>
+        <p style="margin:0 0 26px">권리의 언어만으로는 좋은 삶을 설명할 수 없다. 시민적 덕성, 곧 공동선에 대한 헌신과 서로에 대한 책임이 뒷받침되지 않는 자유는 고립과 무관심으로 귀결된다. 공동체가 개인에게 부과하는 의무는 자유의 제약이 아니라, 개인이 의미 있는 삶을 살아가기 위한 조건이다.</p>
+        <p style="margin:0 0 26px"><mark class="highlight-anchor" id="highlight-b" data-highlight-id="highlight-b" style="color:inherit;background:#eff9c8;box-decoration-break:clone;-webkit-box-decoration-break:clone;transition:background-color .2s ease, box-shadow .2s ease">(다) A시는 도심의 오래된 골목 상권이 관광지로 알려지면서 소음과 쓰레기 문제로 몸살을 앓자, 주민 투표를 거쳐 야간 영업시간을 제한하는 조례를 제정하였다.</mark> 상인 일부는 "영업의 자유에 대한 과도한 침해"라며 반발했지만, 다수 주민은 "마을의 삶을 지키기 위한 최소한의 약속"이라며 찬성하였다. 조례 시행 후 관광객은 줄었으나 주민 만족도는 크게 높아졌고, 일부 상인은 매출 감소를 이유로 조례 폐지를 청구하는 소송을 제기하였다.</p>
+        <p style="margin:0 0 26px"><mark class="highlight-anchor" id="highlight-c" data-highlight-id="highlight-c" style="color:inherit;background:#eff9c8;box-decoration-break:clone;-webkit-box-decoration-break:clone;transition:background-color .2s ease, box-shadow .2s ease">(라) 인간은 스스로 판단하고 선택할 때 비로소 자신의 삶의 주인이 된다.</mark> 타인에게 해를 끼치지 않는 한, 개인의 사상과 행동은 어떠한 간섭으로부터도 자유로워야 한다. 사회가 개인의 선택을 대신해 주려는 순간, 그 사회는 구성원을 성숙한 인격체가 아니라 보호와 교정의 대상으로 격하시킨다. 다수가 옳다고 믿는 관행이라 할지라도 그것이 개인에게 강제되는 순간 진리를 향한 토론의 가능성은 닫히고 만다.</p>
+        <p style="margin:0">개별성의 발휘야말로 사회가 진보하는 유일한 원천이다. 관습이 명하는 대로만 사는 사람은 선택이라는 인간 고유의 능력을 사용하지 않는 것이며, 그러한 삶이 아무리 안전해 보일지라도 그것은 모방이지 삶이 아니다. 따라서 좋은 사회란 서로 다른 삶의 실험이 최대한 허용되는 사회이다.</p>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ popoverOpen }}" hint-placeholder-val="{{ false }}">
+        <div role="dialog" aria-modal="false" style="{{ popoverStyle }}">
+          <textarea ref="{{ memoInputRef }}" onChange="{{ onMemoDraft }}" maxLength="{{ 300 }}" placeholder="떠오르는 아이디어나 생각을 메모할 수 있어요. (선택)" aria-label="메모 내용" style="display:block;width:100%;height:102px;resize:none;padding:12px;border:1px solid #e5e7eb;border-radius:12px;outline:0;background:#ffffff;color:#4b5563;font:500 14px/1.6 'Pretendard',Arial,sans-serif;box-sizing:border-box" style-focus="border-color:#008b48"></textarea>
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:12px">
+            <sc-if value="{{ popoverIsEdit }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ removeCurrent }}" type="button" style="margin-right:auto;height:36px;padding:9px 4px;border:0;border-radius:8px;font:inherit;font-size:13px;line-height:1.4;cursor:pointer;background:transparent;color:#9ca3af" style-hover="color:#db3342">형광펜 지우기</button>
+            </sc-if>
+            <button onClick="{{ closePopover }}" type="button" style="width:70px;height:36px;padding:9px 16px;border-radius:8px;font:inherit;font-size:14px;line-height:1.4;cursor:pointer;border:1px solid #e5e7eb;background:#ffffff;color:#4b5563">취소</button>
+            <button onClick="{{ saveMemo }}" type="button" style="width:70px;height:36px;padding:9px 16px;border-radius:8px;font:inherit;font-size:14px;line-height:1.4;cursor:pointer;border:1px solid #008b48;background:#008b48;color:white">저장</button>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+
+    <sc-if value="{{ floatingVisible }}" hint-placeholder-val="{{ false }}">
+      <div ref="{{ floatingRef }}" role="toolbar" aria-label="선택한 텍스트 작업" style="{{ floatingStyle }}">
+        <button onMouseDown="{{ preventDefault }}" onClick="{{ openCreateMemo }}" type="button" aria-disabled="{{ floatingDisabled }}" style="{{ floatingBtnStyle }}">
+          <img src="./assets/pen.svg" alt="" style="width:14px;height:14px;margin-right:6px;vertical-align:-2px">형광펜
+        </button>
+      </div>
+    </sc-if>
+
+    <section onClick="{{ focusInput }}" aria-label="답안지" style="position:absolute;left:891px;top:150px;width:1001px;height:891px;display:flex;flex-direction:column;box-sizing:border-box;cursor:text">
+      <textarea ref="{{ inputRef }}" onChange="{{ onType }}" onPaste="{{ onPaste }}" onFocus="{{ onInputFocus }}" onBlur="{{ onInputBlur }}" spellCheck="{{ false }}" style="position:absolute;left:-9999px;top:0;width:10px;height:10px;opacity:0"></textarea>
+      <div style="flex:0 0 50px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border:1px solid #e5e7eb;background:white;color:#6b7280;font-size:14px;line-height:1.4;border-radius:12px 12px 0 0;box-sizing:border-box">
+        <span>{{ sheetLabel }}</span>
+        <span>{{ countText }}</span>
+      </div>
+      <div style="position:relative;flex:0 0 791px;padding:10px;border-inline:1px solid #e5e7eb;background:white;box-sizing:border-box">
+        <div style="position:relative;width:979px;height:637px;background-size:28px 32px;background-image:linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);border:1px solid #e5e7eb;box-sizing:border-box">
+          <sc-for list="{{ gridChars }}" as="c" hint-placeholder-count="1">
+            <span style="{{ c.style }}">{{ c.ch }}</span>
+          </sc-for>
+        </div>
+        <div style="position:relative;width:979px;height:60px;margin-top:2px;background-size:28px 32px;background-color:#fff1f1;background-image:linear-gradient(to right, #ffb8b8 1px, transparent 1px), linear-gradient(to bottom, #ffb8b8 1px, transparent 1px);border:1px solid #ffb8b8;box-sizing:border-box">
+          <sc-for list="{{ overChars }}" as="c" hint-placeholder-count="0">
+            <span style="{{ c.style }}">{{ c.ch }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex:0 0 50px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border:1px solid #e5e7eb;background:white;font-size:14px;line-height:1.4;border-radius:0 0 12px 12px;color:#4b5563;box-sizing:border-box">
+        <span style="{{ statusStyle }}">{{ statusText }}</span>
+        <span style="display:flex;align-items:center;gap:12px;color:#6b7280">
+          <span>35자 x 20행</span>
+          <i style="width:1px;height:18px;background:#e5e7eb"></i>
+          <b style="color:#db3342;font-weight:500">초과 입력 가능 +2줄</b>
+        </span>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1920,&quot;height&quot;:1080}}">
+class Component extends DCLogic {
+  COLS = 35;
+  ROWS = 20;
+  OVER = 2;
+  TABS = ['문제 1-1', '문제 1-2', '문제 2-1', '문제 2-2'];
+  QUESTIONS = [
+    '제시문 (가)와 (나)의 관점을 종합하여, 바람직한 공동체의 조건을 논하시오.',
+    '제시문 (가)~(라)에 나타난 네 사람의 강점을 종합하여, 좋은 협업의 조건을 논하시오.',
+    '제시문 (나)와 (라)의 자아 개념을 비교하여 설명하시오.',
+    '제시문 전체를 종합하여 개인의 자유와 공동선의 관계를 논하시오.'
+  ];
+  state = {
+    tab: 0, secondsLeft: 6000, answers: ['네 사람의 강점을 모으면 좋은 팀이 만들어진다고 생각', '', '', ''], zoom: 100,
+    memos: [], memoPanelOpen: false, hintOpen: true, floating: null, popover: null, memoDraft: '',
+    autoSave: 'default', savedAt: null
+  };
+  markSaving() {
+    clearTimeout(this.saveTimer);
+    this.setState({ autoSave: 'ing' });
+    this.saveTimer = setTimeout(() => {
+      const s = this.state.secondsLeft;
+      const pad = n => String(n).padStart(2, '0');
+      this.setState({ autoSave: 'saved', savedAt: pad(Math.floor(s / 3600)) + ' : ' + pad(Math.floor((s % 3600) / 60)) + ' : ' + pad(s % 60) });
+    }, 900);
+  }
+  componentDidMount() {
+    this.tick = setInterval(() => this.setState(s => ({ secondsLeft: Math.max(0, s.secondsLeft - 1) })), 1000);
+    this.seq = 1;
+    this.onDocDown = e => {
+      if (this.floatingEl && this.floatingEl.contains(e.target)) return;
+      if (!(this.bodyEl && this.bodyEl.contains(e.target))) this.hideFloatingNow();
+      if (this.state.popover && !e.target.closest('[role="dialog"]')) this.closePopoverNow();
+    };
+    document.addEventListener('mousedown', this.onDocDown);
+  }
+  componentDidUpdate() {
+    this.syncInputs();
+    if (this._lastTab !== this.state.tab) {
+      this._lastTab = this.state.tab;
+      this.hideFloatingNow();
+      this.closePopoverNow();
+      setTimeout(() => this.initMemos(), 0);
+    }
+    if (this._lastMemos !== this.state.memos) {
+      this._lastMemos = this.state.memos;
+      this.decorateMarks();
+    }
+  }
+  syncInputs() {
+    const answer = this.state.answers[this.state.tab] || '';
+    if (this.inputEl && this.inputEl.value !== answer) this.inputEl.value = answer;
+    if (this.memoEl && this.memoEl.value !== this.state.memoDraft) this.memoEl.value = this.state.memoDraft;
+  }
+  componentWillUnmount() {
+    clearInterval(this.tick);
+    clearTimeout(this.saveTimer);
+    document.removeEventListener('mousedown', this.onDocDown);
+  }
+  passageLabel(node) {
+    let p = node.nodeType === 1 ? node.closest('p') : node.parentElement && node.parentElement.closest('p');
+    while (p) {
+      const m = p.textContent.trim().match(/^\(([가-힣])\)/);
+      if (m) return '제시문 (' + m[1] + ')';
+      p = p.previousElementSibling;
+    }
+    return '제시문';
+  }
+  markText(mark) {
+    const c = mark.cloneNode(true);
+    c.querySelectorAll('[data-memo-badge]').forEach(b => b.remove());
+    return c.textContent.trim().replace(/\s+/g, ' ');
+  }
+  rangeText(range) {
+    const frag = range.cloneContents();
+    frag.querySelectorAll('[data-memo-badge]').forEach(b => b.remove());
+    return frag.textContent.trim().replace(/\s+/g, ' ');
+  }
+  initMemos() {
+    if (!this.bodyEl) return;
+    this.setState({
+      memos: [...this.bodyEl.querySelectorAll('mark.highlight-anchor')].map(mark => ({
+        id: mark.dataset.highlightId,
+        passage: this.passageLabel(mark),
+        excerpt: this.markText(mark),
+        content: mark.dataset.memoContent || ''
+      }))
+    }, () => this.decorateMarks());
+  }
+  decorateMarks() {
+    if (!this.bodyEl) return;
+    const marks = [...this.bodyEl.querySelectorAll('mark.highlight-anchor')];
+    marks.forEach(mark => {
+      const i = this.state.memos.findIndex(m => m.id === mark.dataset.highlightId);
+      let badge = mark.querySelector('[data-memo-badge]');
+      if (i < 0) { if (badge) badge.remove(); return; }
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.setAttribute('data-memo-badge', '');
+        badge.setAttribute('contenteditable', 'false');
+        mark.appendChild(badge);
+      }
+      const has = !!this.state.memos[i].content;
+      badge.textContent = '';
+      badge.setAttribute('aria-label', has ? '메모 보기' : '메모 남기기');
+      badge.style.cssText = 'display:inline-block;vertical-align:super;width:8px;height:8px;margin-left:3px;border-radius:999px;user-select:none;-webkit-user-select:none;cursor:pointer;box-sizing:border-box;'
+        + (has ? 'background:#008b48;border:1px solid #008b48;' : 'background:#fff;border:1px solid #008b48;');
+    });
+  }
+  closestHighlight(node) {
+    const el = node.nodeType === 1 ? node : node.parentElement;
+    return (el && el.closest('mark.highlight-anchor')) || null;
+  }
+  unwrap(mark) {
+    mark.querySelectorAll('[data-memo-badge]').forEach(b => b.remove());
+    const parent = mark.parentNode;
+    while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+    mark.remove();
+    parent.normalize();
+  }
+  hideFloatingNow() { this.range = null; this.setState({ floating: null }); }
+  closePopoverNow() { this.pending = null; this.setState({ popover: null, memoDraft: '' }); }
+  setMemoPanel(open) {
+    this.hideFloatingNow();
+    if (open) this.closePopoverNow();
+    this.setState({ memoPanelOpen: open });
+  }
+  cells(text, startRow, nRows, caretIndex) {
+    const out = [];
+    for (let r = 0; r < nRows; r++) {
+      for (let c = 0; c < this.COLS; c++) {
+        const i = (startRow + r) * this.COLS + c;
+        if (caretIndex === i) {
+          out.push({
+            ch: '',
+            style: 'position:absolute;top:' + (5 + r * 32) + 'px;left:' + (1 + c * 28) + 'px;width:2px;height:20px;background:#111827;animation:wpCaret 1s step-end infinite;'
+          });
+        }
+        if (!text[i]) continue;
+        out.push({
+          ch: text[i],
+          style: 'position:absolute;top:' + (1 + r * 32) + 'px;left:' + (1 + c * 28) + 'px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;color:#000;font-size:14px;'
+        });
+      }
+    }
+    return out;
+  }
+  renderVals() {
+    const { tab, secondsLeft, answers, zoom, memos, memoPanelOpen, floating, popover, memoDraft, autoSave, savedAt } = this.state;
+    const MAX = 100;
+    const MIN = 90;
+    const text = answers[tab] || '';
+    const len = text.length;
+    const caretIndex = this.state.inputFocused ? Math.min(len, (this.ROWS + this.OVER) * this.COLS - 1) : -1;
+    const pad = n => String(n).padStart(2, '0');
+    const gate = Math.round(MAX * 0.3);
+    let statusText = '', statusColor = 'rgb(75,85,99)';
+    if (len > MAX) statusText = '최대 글자수를 초과했어요.';
+    else if (len < gate) statusText = '최소 ' + gate + '자 이상 작성해야 답안을 제출할 수 있어요.';
+    else if (len >= MIN) statusText = '적정 글자 수 범위입니다.';
+    const AUTO = {
+      'default': { text: '-- : -- : -- 자동저장', color: 'rgb(156,163,175)' },
+      ing: { text: '저장 중', color: 'rgb(156,163,175)' },
+      saved: { text: savedAt + ' 자동저장', color: 'rgb(156,163,175)' },
+      error: { text: '저장 안 됨', color: 'rgb(219,51,66)' }
+    }[autoSave];
+    const navBase = 'width:120px;height:43px;border:0;border-inline:1px solid #e5e7eb;font:inherit;font-size:14px;cursor:pointer;box-sizing:border-box;';
+    return {
+      timeText: pad(Math.floor(secondsLeft / 3600)) + ' : ' + pad(Math.floor((secondsLeft % 3600) / 60)) + ' : ' + pad(secondsLeft % 60),
+      resetTime: () => this.setState({ secondsLeft: 6000 }),
+      onExit: () => this.props.onExit && this.props.onExit(),
+      onSubmit: () => this.props.onSubmit && this.props.onSubmit(),
+      tabs: this.TABS.map((label, i) => ({
+        label,
+        style: navBase + (i === tab
+          ? 'color:#008b48;background:#f9fafb;border-color:#f9fafb;font-weight:600;'
+          : 'background:#f3f4f6;color:#9ca3af;'),
+        go: () => this.setState({ tab: i })
+      })),
+      questionText: this.QUESTIONS[tab],
+      isTab1: tab === 1,
+      notTab1: tab !== 1,
+      questionMeta: '100점',
+
+      autoSaveText: AUTO.text,
+      autoSaveStyle: 'font-size:12px;line-height:1.5;font-weight:500;white-space:nowrap;color:' + AUTO.color + ';',
+
+      zoomLabel: zoom + '%',
+      passageSize: Math.round(16 * zoom / 100) + 'px',
+      zoomIn: () => this.setState(s => ({ zoom: Math.min(200, s.zoom + 10) })),
+      zoomOut: () => this.setState(s => ({ zoom: Math.max(50, s.zoom - 10) })),
+
+      areaRef: el => { this.areaEl = el; },
+      bodyRef: el => { if (el && el !== this.bodyEl) { this.bodyEl = el; setTimeout(() => this.initMemos(), 0); } },
+      memoCount: memos.length,
+      memoCountLabel: '(' + memos.length + ')',
+      hasMemos: memos.length > 0,
+      memoEmpty: memos.length === 0,
+      memoPanelOpen,
+      memoToggleLabel: memoPanelOpen ? '메모 목록 닫기' : '메모 목록 열기',
+      toggleMemoPanel: () => this.setMemoPanel(!memoPanelOpen),
+      hintOpen: this.state.hintOpen,
+      closeHint: () => this.setState({ hintOpen: false }),
+      popoverIsEdit: !!(popover && popover.id),
+      removeCurrent: () => {
+        if (!popover || !popover.id) return;
+        const t = this.bodyEl && this.bodyEl.querySelector('mark[data-highlight-id="' + popover.id + '"]');
+        if (t) this.unwrap(t);
+        this.pending = null;
+        this.setState(s => ({ memos: s.memos.filter(x => x.id !== popover.id), popover: null, memoDraft: '' }));
+      },
+      memos: memos.map((m, i) => ({
+        number: String(i + 1),
+        excerptText: '\u201C' + m.excerpt + '\u201D',
+        content: m.content,
+        hasContent: !!m.content,
+        editLabel: m.content ? '편집' : '메모 쓰기',
+        jumpLabel: m.passage + ' 원문으로 이동',
+        cardStyle: 'width:100%;min-width:0;overflow:hidden;padding:12px;border:1px solid ' + (m.content ? '#e5e7eb' : '#eef0f2') + ';border-radius:12px;background:' + (m.content ? '#ffffff' : 'transparent') + ';box-sizing:border-box;',
+        jump: () => {
+          this.hideFloatingNow();
+          const t = this.bodyEl && this.bodyEl.querySelector('mark[data-highlight-id="' + m.id + '"]');
+          if (!t) return;
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            this.bodyEl.scrollTo({ top: t.offsetTop - this.bodyEl.clientHeight / 2 + t.offsetHeight / 2, behavior: 'smooth' });
+            this.bodyEl.focus({ preventScroll: true });
+            setTimeout(() => {
+              t.style.background = '#dff2a2';
+              t.style.boxShadow = '0 0 0 2px #9cdb22';
+              setTimeout(() => { t.style.background = '#eff9c8'; t.style.boxShadow = ''; }, 1600);
+            }, 220);
+          }));
+        },
+        edit: () => {
+          const t = this.bodyEl && this.bodyEl.querySelector('mark[data-highlight-id="' + m.id + '"]');
+          const area = this.areaEl.getBoundingClientRect();
+          const r = t ? t.getBoundingClientRect() : { left: area.left + 40, right: area.left + 300, top: area.top + 120, bottom: area.top + 150 };
+          this.pending = null;
+          this.setState({
+            floating: null, memoDraft: m.content,
+            popover: { id: m.id, passage: m.passage, excerpt: m.excerpt, rect: { left: r.left - area.left, right: r.right - area.left, top: r.top - area.top, bottom: r.bottom - area.top } }
+          });
+        },
+        remove: () => {
+          const t = this.bodyEl && this.bodyEl.querySelector('mark[data-highlight-id="' + m.id + '"]');
+          if (t) this.unwrap(t);
+          this.setState(s => ({
+            memos: s.memos.filter(x => x.id !== m.id),
+            popover: s.popover && s.popover.id === m.id ? null : s.popover
+          }));
+        }
+      })),
+
+      floatingVisible: !!floating,
+      floatingDisabled: floating ? String(!floating.valid) : 'false',
+      floatingRef: el => { this.floatingEl = el; },
+      floatingStyle: 'position:absolute;z-index:20;display:flex;align-items:center;height:30px;left:' + (floating ? floating.x : 0) + 'px;top:' + (floating ? floating.y : 0) + 'px;',
+      floatingBtnStyle: 'display:inline-flex;align-items:center;height:30px;padding:4px 12px;border:1px solid #e5e7eb;border-radius:8px;font:inherit;font-size:14px;line-height:1.4;font-weight:500;white-space:nowrap;box-shadow:0 2px 8px rgba(17,24,39,.08);' + (floating && floating.valid
+        ? 'background:#ffffff;color:#4b5563;cursor:pointer;'
+        : 'background:#f3f4f6;color:#9ca3af;cursor:default;'),
+      preventDefault: e => e.preventDefault(),
+      hideFloating: () => this.hideFloatingNow(),
+      onBodyClick: e => {
+        const badge = e.target.closest && e.target.closest('[data-memo-badge]');
+        const mark = e.target.closest && e.target.closest('mark.highlight-anchor');
+        if (!mark) return;
+        const sel = window.getSelection();
+        if (!badge && sel && !sel.isCollapsed) return;
+        const m = this.state.memos.find(x => x.id === mark.dataset.highlightId);
+        if (!m) return;
+        const area = this.areaEl.getBoundingClientRect();
+        const r = mark.getBoundingClientRect();
+        this.pending = null;
+        this.hideFloatingNow();
+        this.setState({
+          memoDraft: m.content,
+          popover: { id: m.id, passage: m.passage, excerpt: m.excerpt, rect: { left: r.left - area.left, right: r.right - area.left, top: r.top - area.top, bottom: r.bottom - area.top } }
+        });
+      },
+      captureSelection: () => requestAnimationFrame(() => {
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed || !sel.rangeCount) return this.hideFloatingNow();
+        const range = sel.getRangeAt(0).cloneRange();
+        if (!this.bodyEl.contains(range.commonAncestorContainer)) return this.hideFloatingNow();
+        // 1. 이미 하이라이트된 구간은 선택에서 잘라낸다
+        const sm = this.closestHighlight(range.startContainer);
+        const em = this.closestHighlight(range.endContainer);
+        if (sm && sm === em) return this.hideFloatingNow();
+        if (sm) range.setStartAfter(sm);
+        if (em) range.setEndBefore(em);
+        if (range.collapsed || !this.rangeText(range)) return this.hideFloatingNow();
+        // 선택 안에 다른 하이라이트가 통째로 들어 있으면 불가
+        const frag = range.cloneContents();
+        if (frag.querySelector('mark.highlight-anchor')) return this.hideFloatingNow();
+        const sp = range.startContainer.nodeType === 1 ? range.startContainer.closest('p') : range.startContainer.parentElement.closest('p');
+        const ep = range.endContainer.nodeType === 1 ? range.endContainer.closest('p') : range.endContainer.parentElement.closest('p');
+        if (!sp || sp !== ep) return this.hideFloatingNow();
+        if (sm || em) { sel.removeAllRanges(); sel.addRange(range); }
+        this.range = range.cloneRange();
+        const sr = range.getBoundingClientRect();
+        const ex = this.areaEl.closest('[data-screen-label]').getBoundingClientRect();
+        const MENU = 90;
+        this.setState({
+          floating: {
+            valid: true, entryId: null,
+            x: Math.max(30, Math.min(870 - MENU, sr.left - ex.left + sr.width / 2 - MENU / 2)),
+            y: Math.max(282, sr.top - ex.top - 38)
+          }
+        });
+      }),
+      openCreateMemo: () => {
+        if (!floating || !floating.valid || !this.range) return;
+        const range = this.range.cloneRange();
+        const rects = [...range.getClientRects()];
+        const r = rects[rects.length - 1] || range.getBoundingClientRect();
+        const area = this.areaEl.getBoundingClientRect();
+        this.pending = {
+          range, existingId: null,
+          excerpt: this.rangeText(range),
+          passage: this.passageLabel(range.startContainer)
+        };
+        const s = window.getSelection(); if (s) s.removeAllRanges();
+        this.setState({
+          floating: null, memoDraft: '',
+          popover: { id: null, passage: this.pending.passage, excerpt: this.pending.excerpt, rect: { left: r.left - area.left, right: r.right - area.left, top: r.top - area.top, bottom: r.bottom - area.top } }
+        });
+      },
+      popoverOpen: !!popover,
+      popoverQuestion: this.TABS[tab],
+      popoverPassage: popover ? popover.passage : '',
+      popoverExcerpt: popover ? '\u201C' + popover.excerpt + '\u201D' : '',
+      popoverStyle: (() => {
+        const W = 348, H = 236;
+        const R = 820;
+        const r = popover ? popover.rect : { left: 0, right: 0, top: 0, bottom: 0 };
+        let left = r.right + 8;
+        if (left + W > R) left = r.left - W - 8;
+        left = Math.max(20, Math.min(R - W, left));
+        let top = r.bottom + 8;
+        if (top + H > 739) top = r.top - H - 8;
+        top = Math.max(58, Math.min(739 - H, top));
+        return 'position:absolute;z-index:30;width:348px;padding:20px;border-radius:12px;background:#ffffff;box-shadow:0 4px 12px rgba(17,24,39,.12);box-sizing:border-box;left:' + left + 'px;top:' + top + 'px;';
+      })(),
+      memoDraft,
+      memoInputRef: el => {
+        this.memoEl = el;
+        if (!el) return;
+        el.value = this.state.memoDraft;
+        setTimeout(() => el.focus({ preventScroll: true }), 0);
+      },
+      onMemoDraft: e => this.setState({ memoDraft: e.target.value }),
+      closePopover: () => this.closePopoverNow(),
+      saveMemo: () => {
+        const content = (this.state.memoDraft || '').trim();
+        const p = popover;
+        this.setState(s => {
+          let next = s.memos.slice();
+          if (p && p.id) {
+            next = next.map(m => m.id === p.id ? { ...m, content } : m);
+          } else if (this.pending && this.pending.existingId) {
+            const eid = this.pending.existingId;
+            next = next.map(m => m.id === eid ? { ...m, content } : m);
+          } else if (this.pending && this.pending.range) {
+            const id = 'memo-highlight-' + this.seq++;
+            const mark = document.createElement('mark');
+            mark.className = 'highlight-anchor';
+            mark.id = id;
+            mark.dataset.highlightId = id;
+            mark.style.cssText = 'color:inherit;background:#eff9c8;box-decoration-break:clone;-webkit-box-decoration-break:clone;transition:background-color .2s ease, box-shadow .2s ease';
+            mark.append(this.pending.range.extractContents());
+            mark.querySelectorAll('[data-memo-badge]').forEach(b => b.remove());
+            this.pending.range.insertNode(mark);
+            mark.parentNode.normalize();
+            next.push({ id, passage: this.pending.passage, excerpt: this.pending.excerpt, content });
+          }
+          return { memos: next, popover: null, memoDraft: '' };
+        });
+        this.pending = null;
+      },
+
+      sheetLabel: this.TABS[tab].replace('문제 ', '') + ' 답안지',
+      countText: len + '자 (' + MIN + '자 ~ ' + MAX + '자)',
+      statusText,
+      statusStyle: 'color:' + statusColor + ';',
+      gridChars: this.cells(text, 0, this.ROWS, caretIndex),
+      overChars: this.cells(text, this.ROWS, this.OVER, caretIndex),
+      answerText: text,
+      inputRef: el => {
+        this.inputEl = el;
+        if (el) el.value = this.state.answers[this.state.tab] || '';
+      },
+      focusInput: () => { if (this.inputEl) this.inputEl.focus(); },
+      onInputFocus: () => this.setState({ inputFocused: true }),
+      onInputBlur: () => this.setState({ inputFocused: false }),
+      onType: e => {
+        const v = e.target.value.replace(/[\n\r\t]/g, '').slice(0, (this.ROWS + this.OVER) * this.COLS);
+        this.setState(s => {
+          const next = s.answers.slice();
+          next[s.tab] = v;
+          return { answers: next };
+        });
+        this.markSaving();
+      },
+      onPaste: e => e.preventDefault()
+    };
+  }
+}
+</script>
+</body>
+</html>

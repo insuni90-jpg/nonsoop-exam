@@ -1,13 +1,13 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="23.4363" height="31.9619" viewBox="0 0 23.4363 31.9619" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Group 1">
-<path id="Rectangle 162" d="M11.7171 5.85962C11.7171 2.62344 14.3405 0 17.5767 0V0C20.8129 0 23.4363 2.62344 23.4363 5.85962V31.9615H11.7171V5.85962Z" fill="#008B48"/>
-<path id="Rectangle 163" d="M0 5.85962C0 2.62344 2.62344 0 5.85962 0V0C9.09579 0 11.7192 2.62344 11.7192 5.85962V31.9615H0V5.85962Z" fill="#B5E82A"/>
-<path id="Intersect" d="M5.86175 0C9.09793 0 11.7221 2.62417 11.7221 5.86035L11.7211 31.9619L0.0023738 7.05664V5.86035C0.0023738 2.62431 2.62577 0.000228063 5.86175 0Z" fill="url(#paint0_linear_0_78)"/>
+<path id="Rectangle 162" d="M11.7171 5.85962C11.7171 2.62344 14.3405 0 17.5767 0V0C20.8129 0 23.4363 2.62344 23.4363 5.85962V31.9615H11.7171V5.85962Z" fill="#008B48"></path>
+<path id="Rectangle 163" d="M0 5.85962C0 2.62344 2.62344 0 5.85962 0V0C9.09579 0 11.7192 2.62344 11.7192 5.85962V31.9615H0V5.85962Z" fill="#B5E82A"></path>
+<path id="Intersect" d="M5.86175 0C9.09793 0 11.7221 2.62417 11.7221 5.86035L11.7211 31.9619L0.0023738 7.05664V5.86035C0.0023738 2.62431 2.62577 0.000228063 5.86175 0Z" fill="url(#paint0_linear_0_78)"></path>
 </g>
 <defs>
 <linearGradient id="paint0_linear_0_78" x1="1.82544" y1="5.45128" x2="10.1494" y2="30.4206" gradientUnits="userSpaceOnUse">
-<stop stop-color="#B5E82A"/>
-<stop offset="1" stop-color="#008B48"/>
+<stop stop-color="#B5E82A"></stop>
+<stop offset="1" stop-color="#008B48"></stop>
 </linearGradient>
 </defs>
 </svg>

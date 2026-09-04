@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Pretendard";src:url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");font-weight:45 920;font-display:swap}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#F9FAFB}
+a{color:#00661A;text-decoration:none}a:hover{color:#008B48}
+.cd-ring{fill:none;stroke:#008B48;stroke-width:3px;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;vector-effect:non-scaling-stroke}
+.cd-start-ring{fill:none;stroke:#008B48;stroke-width:1.5px;vector-effect:non-scaling-stroke;opacity:0}
+.cd-caption-copy{position:absolute;inset:0;display:block;text-align:center;transition:opacity 180ms ease, transform 180ms ease}
+.cd-before{opacity:1;transform:translateY(0)}
+.cd-calm{opacity:0;transform:translateY(3px)}
+.cd-caption.show-calm .cd-before{opacity:0;transform:translateY(-3px)}
+.cd-caption.show-calm .cd-calm{opacity:1;transform:translateY(0)}
+.cd-view.is-exiting .cd-caption{animation:cd-caption-exit 220ms ease-in both}
+.cd-view.is-exiting .cd-svg{animation:cd-ring-handoff 220ms ease-out both}
+[hidden]{display:none !important}
+@keyframes cd-ring-handoff{from{opacity:1;transform:rotate(-90deg) scale(1)}to{opacity:0;transform:rotate(-90deg) scale(1.035)}}
+@keyframes cd-caption-exit{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(-3px)}}
+</style>
+</helmet>
+<div data-screen-label="카운트다운" style="position:relative;display:grid;width:100vw;height:100dvh;min-height:320px;place-items:center;overflow:hidden;background:#F9FAFB;color:#008B48;font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo',Arial,sans-serif">
+  <div style="position:relative;display:grid;width:400px;height:400px;place-items:center">
+    <div ref="{{ countdownViewRef }}" class="cd-view" style="position:absolute;inset:0;display:grid;place-items:center">
+      <svg class="cd-svg" viewBox="0 0 208 208" aria-hidden="true" style="position:absolute;width:208px;height:208px;overflow:visible;transform:rotate(-90deg);transform-origin:center">
+        <circle ref="{{ countdownRingRef }}" class="cd-ring" cx="104" cy="104" r="96" pathLength="100"></circle>
+      </svg>
+      <span ref="{{ countdownNumberRef }}" aria-live="assertive" aria-atomic="true" style="position:relative;z-index:2;color:#008B48;line-height:1;opacity:0;font-size:76px;font-weight:500;letter-spacing:-.035em;will-change:transform,opacity">3</span>
+      <p ref="{{ motionCaptionRef }}" class="cd-caption" style="position:absolute;top:calc(50% + 128px);left:50%;width:280px;height:24px;margin:0;color:#6B7280;font-size:16px;font-weight:500;line-height:1.5;letter-spacing:-.02em;transform:translateX(-50%)">
+        <span class="cd-caption-copy cd-before">곧 시험이 시작돼요.</span>
+        <span class="cd-caption-copy cd-calm">차분하게, 시작해볼까요.</span>
+      </p>
+    </div>
+    <div ref="{{ startViewRef }}" hidden="{{ true }}" style="position:absolute;inset:0;display:grid;place-items:center">
+      <svg ref="{{ startPortalRef }}" viewBox="0 0 240 240" aria-hidden="true" style="position:absolute;width:240px;height:240px;overflow:visible;transform-origin:center">
+        <circle ref="{{ startRingRef }}" class="cd-start-ring" cx="120" cy="120" r="98"></circle>
+      </svg>
+      <span ref="{{ startTextRef }}" aria-live="assertive" style="position:relative;z-index:2;color:#008B48;line-height:1;opacity:0;font-size:52px;font-weight:600;letter-spacing:-.04em;will-change:transform,opacity">시작</span>
+    </div>
+  </div>
+  <button ref="{{ replayButtonRef }}" onClick="{{ replay }}" type="button" style="position:fixed;top:24px;right:24px;min-width:80px;height:36px;padding:0 14px;border:1px solid #008B48;border-radius:8px;background:transparent;color:#008B48;font-family:inherit;font-size:13px;font-weight:500;line-height:1;cursor:pointer;opacity:.72" style-hover="opacity:1">다시 보기</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  MOTION = { values: [3, 2, 1], countdownDuration: 1000, startDuration: 1260, ringEasing: 'cubic-bezier(.32, 0, .68, 1)' };
+  els = {};
+  ref(name) { return el => { this.els[name] = el; }; }
+  componentDidMount() { requestAnimationFrame(() => this.play()); }
+  componentWillUnmount() { this._dead = true; }
+  cancel(el) { if (el) el.getAnimations().forEach(a => a.cancel()); }
+  reset() {
+    const e = this.els;
+    [e.countdownRing, e.countdownNumber, e.startPortal, e.startRing, e.startText].forEach(x => this.cancel(x));
+    e.countdownView.hidden = false;
+    e.countdownView.classList.remove('is-exiting');
+    e.motionCaption.classList.remove('show-calm');
+    e.startView.hidden = true;
+  }
+  animateRingStep(isFinal) {
+    const ring = this.els.countdownRing;
+    this.cancel(ring);
+    const prog = ring.animate([{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration: this.MOTION.countdownDuration, easing: this.MOTION.ringEasing, fill: 'forwards' });
+    const frames = isFinal
+      ? [{ offset: 0, opacity: 0 }, { offset: .06, opacity: 1 }, { offset: 1, opacity: 1 }]
+      : [{ offset: 0, opacity: 0 }, { offset: .06, opacity: 1 }, { offset: .88, opacity: 1 }, { offset: 1, opacity: 0 }];
+    const vis = ring.animate(frames, { duration: this.MOTION.countdownDuration, easing: 'linear', fill: 'forwards' });
+    return Promise.all([prog.finished, vis.finished]);
+  }
+  animateNumberStep(value) {
+    const n = this.els.countdownNumber;
+    this.cancel(n);
+    n.textContent = value;
+    return n.animate([
+      { offset: 0, opacity: 0, transform: 'scale(.94)', easing: 'cubic-bezier(.2, .75, .25, 1)' },
+      { offset: .16, opacity: 1, transform: 'scale(.985)', easing: 'linear' },
+      { offset: .78, opacity: 1, transform: 'scale(1.025)', easing: 'cubic-bezier(.4, 0, 1, 1)' },
+      { offset: 1, opacity: 0, transform: 'scale(1.055)' },
+    ], { duration: this.MOTION.countdownDuration, fill: 'both' }).finished;
+  }
+  animateStart() {
+    const e = this.els;
+    e.startView.hidden = false;
+    e.countdownView.classList.add('is-exiting');
+    const ringReveal = e.startRing.animate([{ offset: 0, opacity: 0 }, { offset: .08, opacity: 1 }, { offset: 1, opacity: 1 }], { duration: this.MOTION.startDuration, easing: 'ease-out', fill: 'forwards' });
+    const portal = e.startPortal.animate([
+      { offset: 0, opacity: 1, transform: 'scale(1)' },
+      { offset: .1, opacity: 1, transform: 'scale(.985)' },
+      { offset: .24, opacity: .98, transform: 'scale(1.035)' },
+      { offset: .58, opacity: .62, transform: 'scale(1.16)' },
+      { offset: .82, opacity: .23, transform: 'scale(1.29)' },
+      { offset: 1, opacity: 0, transform: 'scale(1.4)' },
+    ], { duration: this.MOTION.startDuration, easing: 'cubic-bezier(.16, .72, .2, 1)', fill: 'forwards' });
+    const text = e.startText.animate([
+      { offset: 0, opacity: 0, transform: 'scale(.9)' },
+      { offset: .15, opacity: 1, transform: 'scale(.99)' },
+      { offset: .24, opacity: 1, transform: 'scale(.982)' },
+      { offset: .38, opacity: 1, transform: 'scale(1.01)' },
+      { offset: 1, opacity: 1, transform: 'scale(1.04)' },
+    ], { duration: this.MOTION.startDuration, easing: 'cubic-bezier(.18, .72, .2, 1)', fill: 'forwards' });
+    return Promise.all([ringReveal.finished, portal.finished, text.finished]);
+  }
+  async play() {
+    if (this._playing || this._dead || !this.els.countdownView) return;
+    this._playing = true;
+    if (this.els.replayButton) this.els.replayButton.disabled = true;
+    this.reset();
+    for (const value of this.MOTION.values) {
+      this.els.motionCaption.classList.toggle('show-calm', value === 1);
+      await Promise.all([this.animateRingStep(value === 1), this.animateNumberStep(value)]);
+      if (this._dead) return;
+    }
+    await this.animateStart();
+    if (this._dead) return;
+    this.els.countdownView.hidden = true;
+    if (this.els.replayButton) this.els.replayButton.disabled = false;
+    this._playing = false;
+    if (this.props.onDone) this.props.onDone();
+  }
+  renderVals() {
+    return {
+      countdownViewRef: this.ref('countdownView'),
+      countdownRingRef: this.ref('countdownRing'),
+      countdownNumberRef: this.ref('countdownNumber'),
+      motionCaptionRef: this.ref('motionCaption'),
+      startViewRef: this.ref('startView'),
+      startPortalRef: this.ref('startPortal'),
+      startRingRef: this.ref('startRing'),
+      startTextRef: this.ref('startText'),
+      replayButtonRef: this.ref('replayButton'),
+      replay: () => this.play(),
+    };
+  }
+}
+</script>
+</body>
+</html>

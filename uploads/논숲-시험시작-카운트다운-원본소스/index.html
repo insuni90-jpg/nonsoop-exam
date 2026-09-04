@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>논숲 시험 시작 카운트다운 · 라인 버전</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="prototype" aria-label="시험 시작 카운트다운 모션 테스트">
+      <section class="motion-stage" aria-label="3, 2, 1, 시작 카운트다운">
+        <div class="countdown-view" id="countdownView">
+          <svg class="countdown-svg" viewBox="0 0 208 208" aria-hidden="true">
+            <circle
+              class="countdown-ring"
+              id="countdownRing"
+              cx="104"
+              cy="104"
+              r="96"
+              pathLength="100"
+            ></circle>
+          </svg>
+
+          <span class="countdown-number" id="countdownNumber" aria-live="assertive" aria-atomic="true">3</span>
+
+          <p class="motion-caption" id="motionCaption">
+            <span class="caption-copy caption-before">곧 시험이 시작돼요.</span>
+            <span class="caption-copy caption-calm">차분하게, 시작해볼까요.</span>
+          </p>
+        </div>
+
+        <div class="start-view" id="startView" hidden>
+          <svg class="start-portal" id="startPortal" viewBox="0 0 240 240" aria-hidden="true">
+            <circle class="start-ring" id="startRing" cx="120" cy="120" r="98"></circle>
+          </svg>
+          <span class="start-text" id="startText" aria-live="assertive">시작</span>
+        </div>
+      </section>
+
+      <button class="replay-button" id="replayButton" type="button">다시 보기</button>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

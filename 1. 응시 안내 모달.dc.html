@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Pretendard";src:url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");font-weight:45 920;font-display:swap}
+html,body{margin:0;padding:0;background:#F3F4F6}
+a{color:#00661A;text-decoration:none}a:hover{color:#008B48}
+::selection{background:#CBF6C3}
+</style>
+</helmet>
+<div data-screen-label="응시 안내 모달" style="min-height:100vh;min-width:1280px;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-family:'Pretendard',sans-serif;letter-spacing:-0.3px;padding:48px 0;box-sizing:border-box">
+  <div style="width:540px;background:#FFFFFF;border-radius:16px;box-shadow:0 4px 12px rgba(17,24,39,0.12);box-sizing:border-box;padding:32px;display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-weight:600;font-size:20px;line-height:1.5;color:#111827">경희대학교 2026학년도 인문계열 모의 논술</div>
+      <div style="font-weight:500;font-size:14px;line-height:1.6;color:#4B5563">문항 3개 · 제한 시간 90분</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:#CAE5FA;border-radius:12px;padding:12px 20px;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span style="font-weight:500;font-size:16px;line-height:1.6;color:#111827">제한 시간 내 답안을 제출해 주세요.</span>
+        </div>
+        <div style="padding-left:28px;font-weight:500;font-size:14px;line-height:1.6;color:#4B5563">시간이 지나면 그대로 제출하거나, 답안을 지우고 새로 써야 해요.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;font-weight:500;font-size:14px;line-height:2;color:#4B5563">
+        <span>답안은 작성 중 자동으로 저장돼요.</span>
+        <span>응시창을 나가면 남은 시간과 작성된 답안이 저장돼요.</span>
+        <span>응시창을 나가더라도 다시 들어오면 이어서 응시할 수 있어요.</span>
+        <span>시험의 만료일은 구매일로부터 7일입니다.</span>
+        <span>시험 만료 시 채점결과를 받을 수 없으며, 구매한 완두콩도 돌려받지 못해요.</span>
+        <span>시험 진행하면 구매를 취소할 수 없어요.</span>
+      </div>
+    </div>
+    <label onClick="{{ toggleCheck }}" style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;width:fit-content">
+      <span style="{{ checkboxStyle }}">
+        <sc-if value="{{ checked }}" hint-placeholder-val="{{ false }}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </sc-if>
+      </span>
+      <span style="font-weight:500;font-size:14px;line-height:1.6;color:#111827">위 내용을 모두 확인했어요.</span>
+    </label>
+    <div style="display:flex;gap:8px">
+      <button style="flex:1 1 0;height:44px;border-radius:8px;border:1px solid #E5E7EB;background:#FFFFFF;font-family:'Pretendard',sans-serif;font-size:16px;font-weight:600;color:#4B5563;cursor:pointer;letter-spacing:-0.3px" style-hover="background:#F9FAFB">취소</button>
+      <button disabled="{{ startDisabled }}" onClick="{{ onStart }}" style="{{ startBtnStyle }}" style-hover="{{ startBtnHoverStyle }}">시험 진행</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { checked: false };
+  renderVals() {
+    const checked = this.state.checked;
+    const base = 'flex:none;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background 0.15s,border 0.15s;';
+    const btnBase = 'flex:1 1 0;height:44px;border-radius:8px;border:none;font-family:Pretendard,sans-serif;font-size:16px;font-weight:600;letter-spacing:-0.3px;transition:background 0.15s;';
+    return {
+      checked,
+      toggleCheck: () => this.setState(s => ({ checked: !s.checked })),
+      checkboxStyle: base + (checked ? 'background:#008B48;border:1.5px solid #008B48' : 'background:#FFFFFF;border:1.5px solid #E5E7EB'),
+      startDisabled: !checked,
+      startBtnStyle: btnBase + (checked ? 'background:#008B48;color:#FFFFFF;cursor:pointer' : 'background:#E5E7EB;color:#6B7280;cursor:not-allowed'),
+      startBtnHoverStyle: btnBase + (checked ? 'background:#00661A;color:#FFFFFF;cursor:pointer' : 'background:#E5E7EB;color:#6B7280;cursor:not-allowed'),
+      onStart: () => { if (this.state.checked && this.props.onStart) this.props.onStart(); }
+    };
+  }
+}
+</script>
+</body>
+</html>
